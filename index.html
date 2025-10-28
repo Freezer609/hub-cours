@@ -3,48 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cours - Menu principal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <title>Hub des 6A</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0d1117;
-            color: #c9d1d9;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="bg-gray-900 text-gray-200">
-
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl sm:text-5xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Cours - Menu principal</h1>
-        <p class="mb-12 text-xl text-gray-300 font-semibold">Cliquez sur le nom du site que vous cherchez</p>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <a href="https://freezer609.github.io/1000-mots/" target="_blank" class="block">
-                <div class="relative w-full h-48 sm:h-64 rounded-xl shadow-lg transition-transform transform hover:scale-105 border border-gray-700 overflow-hidden" style="background-color: #9333ea;">
-                    <div class="flex items-center justify-center h-full">
-                        <span class="text-white font-semibold text-lg">1000 mots</span>
+<body class="bg-gray-900 text-gray-200 font-sans">
+    <div class="flex">
+        <aside class="w-64 bg-gray-800 p-6 min-h-screen">
+            <h1 class="text-2xl font-bold text-white mb-8">Hub des 6A</h1>
+            <nav>
+                <ul>
+                    <li class="mb-4"><a href="#" id="dashboard-link" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-tachometer-alt mr-3"></i>Tableau de bord</a></li>
+                    <li class="mb-4"><a href="#" id="favorites-link" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-star mr-3"></i>Mes Favoris</a></li>
+                    <li class="mb-4">
+                        <span class="text-gray-500 text-sm font-bold">MATIÈRES</span>
+                        <ul class="mt-2">
+                            <li class="mb-2"><a href="#" class="flex items-center text-gray-300 hover:text-white" data-category="Maths"><i class="fas fa-calculator mr-3"></i>Maths</a></li>
+                            <li class="mb-2"><a href="#" class="flex items-center text-gray-300 hover:text-white" data-category="Sciences"><i class="fas fa-flask mr-3"></i>Sciences</a></li>
+                            <li class="mb-2"><a href="#" class="flex items-center text-gray-300 hover:text-white" data-category="Histoire"><i class="fas fa-landmark mr-3"></i>Histoire</a></li>
+                            <li class="mb-2"><a href="#" class="flex items-center text-gray-300 hover:text-white" data-category="Code"><i class="fas fa-code mr-3"></i>Code</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <main class="flex-1 p-8">
+            <header class="flex justify-between items-center mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-white">Content de vous revoir, la 6A !</h2>
+                    <p class="text-gray-400">Votre hub centralisé pour tous les supports d'étude.</p>
+                </div>
+                <div class="relative">
+                    <input type="text" id="search-bar" placeholder="Rechercher des ressources..." class="bg-gray-700 text-white rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </header>
+            <div id="main-content">
+                <section>
+                    <h3 class="text-xl font-bold text-white mb-4">Accès Rapide</h3>
+                    <div id="quick-access-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     </div>
-                </div>
-            </a>
-
-            <a href="https://freezer609.github.io/voc-anglais" target="_blank" class="block">
-                <div class="flex items-center justify-center w-full h-48 sm:h-64 rounded-xl shadow-lg transition-transform transform hover:scale-105 border border-gray-700" style="background-color: #3b82f6;">
-                    <span class="text-white font-semibold text-lg">Anglais</span>
-                </div>
-            </a>
-        </div>
+                </section>
+                <section class="mt-8">
+                    <h3 class="text-xl font-bold text-white mb-4">Ajouts Récents</h3>
+                    <div id="recently-added-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+                </section>
+            </div>
+            <div id="favorites-content" class="hidden">
+                <section>
+                    <h3 class="text-xl font-bold text-white mb-4">Mes Favoris</h3>
+                    <div id="favorites-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+                </section>
+            </div>
+        </main>
     </div>
-
+    <script src="script.js"></script>
 </body>
 </html>

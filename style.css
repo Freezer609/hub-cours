@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+aside nav a.active {
+    color: white;
+    background-color: #1e3a8a;
+    border-radius: 0.375rem;
+    padding: 0.5rem 1rem;
+}
+
+.card {
+    background-color: #1f2937;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #374151;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.card .card-icon {
+    font-size: 1.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.card .card-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #f3f4f6;
+}
+
+.card .card-description {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    flex-grow: 1;
+    margin-bottom: 1rem;
+}
+
+.card .card-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #60a5fa;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.card .card-link:hover {
+    color: #3b82f6;
+}
+
+.math-icon { background-color: #3b82f6; color: white; }
+.science-icon { background-color: #10b981; color: white; }
+.history-icon { background-color: #f97316; color: white; }
+.coding-icon { background-color: #8b5cf6; color: white; }
+
+@media (max-width: 768px) {
+    .flex {
+        flex-direction: column;
+    }
+    aside {
+        width: 100%;
+        min-height: auto;
+        padding-bottom: 1rem;
+    }
+    main {
+        padding: 1.5rem;
+    }
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    header .relative {
+        margin-top: 1rem;
+        width: 100%;
+    }
+    #search-bar {
+        width: 100%;
+    }
+}
