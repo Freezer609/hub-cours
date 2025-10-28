@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const resources = [
         {
             id: 1,
-            title: 'Exercices de vocabulaire',
-            description: 'Pratiquez les 1000 mots les plus courants.',
+            title: '1000 mots',
+            description: 'un site regroupant le vocabulaire du livre 1000 mots',
             url: '#',
             icon: 'fas fa-file-word',
             category: '1000-mots',
@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 2,
-            title: 'Leçon de grammaire',
-            description: 'Apprenez les bases de la grammaire anglaise.',
+            title: 'voc anglais',
+            description: 'pareil que pour le 1000 mots mais en version anglais. Comprend également les mots de voc prit en classe',
             url: '#',
             icon: 'fas fa-language',
             category: 'anglais',
@@ -151,3 +151,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     displayResources();
 });
+
