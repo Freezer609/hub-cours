@@ -43,5 +43,14 @@
         "icon": "fas fa-file-pdf",
         "category": "pdfs",
         "type": "recent"
+    },
+    {
+        "id": 6,
+        "title": "Cv ",
+        "description": "PDF - Cv .pdf",
+        "url": "uploads/Cv .pdf",
+        "icon": "fas fa-file-pdf",
+        "category": "pdfs",
+        "type": "recent"
     }
 ]

@@ -171,6 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
             favoritesLink.addEventListener('click', (e) => {
                 e.preventDefault();
                 displayFavorites();
+            });
+
             const uploadForm = document.getElementById('upload-form');
             if (uploadForm) {
                 uploadForm.addEventListener('submit', (e) => {
