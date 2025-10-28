@@ -68,6 +68,8 @@ aside nav a.active {
 .science-icon { background-color: #10b981; color: white; }
 .history-icon { background-color: #f97316; color: white; }
 .coding-icon { background-color: #8b5cf6; color: white; }
+.1000-mots-icon { background-color: #3b82f6; color: white; }
+.anglais-icon { background-color: #10b981; color: white; }
 
 @media (max-width: 768px) {
     .flex {

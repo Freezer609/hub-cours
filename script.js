@@ -1,5 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const resources = [];
+    const resources = [
+        {
+            id: 1,
+            title: 'Exercices de vocabulaire',
+            description: 'Pratiquez les 1000 mots les plus courants.',
+            url: '#',
+            icon: 'fas fa-file-word',
+            category: '1000-mots',
+            type: 'recent'
+        },
+        {
+            id: 2,
+            title: 'Leçon de grammaire',
+            description: 'Apprenez les bases de la grammaire anglaise.',
+            url: '#',
+            icon: 'fas fa-language',
+            category: 'anglais',
+            type: 'recent'
+        }
+    ];
 
     const quickAccessGrid = document.getElementById('quick-access-grid');
     const recentlyAddedGrid = document.getElementById('recently-added-grid');
