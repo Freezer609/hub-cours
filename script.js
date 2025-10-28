@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const dashboardLink = document.getElementById('dashboard-link');
     const favoritesLink = document.getElementById('favorites-link');
     const mainContent = document.getElementById('main-content');
-    const favoritesContent = document.getElementById('favorites-content');
+        const favoritesContent = document.getElementById('favorites-content');
+    const pdfsContent = document.getElementById('pdfs-content');
     let currentCategory = 'all';
     let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 
@@ -88,6 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
         recentlyAddedGrid.innerHTML = '';
         mainContent.classList.remove('hidden');
         favoritesContent.classList.add('hidden');
+        if (pdfsContent) {
+            pdfsContent.classList.add('hidden');
+        }
 
         const filteredResources = resources.filter(resource => {
             const matchesCategory = categoryFilter === 'all' || resource.category === categoryFilter;
@@ -109,12 +113,71 @@ document.addEventListener('DOMContentLoaded', () => {
         favoritesGrid.innerHTML = '';
         mainContent.classList.add('hidden');
         favoritesContent.classList.remove('hidden');
+        if (pdfsContent) {
+            pdfsContent.classList.add('hidden');
+        }
 
         const favoriteResources = resources.filter(resource => favorites.includes(resource.id));
 
         favoriteResources.forEach(resource => {
             const card = createResourceCard(resource);
             favoritesGrid.appendChild(card);
+        });
+    }
+
+    function displayPdfs() {
+        mainContent.classList.add('hidden');
+        favoritesContent.classList.add('hidden');
+        if (pdfsContent) {
+            pdfsContent.classList.remove('hidden');
+        }
+
+        const pdfsGrid = document.getElementById('pdfs-grid');
+        if (pdfsGrid) {
+            pdfsGrid.innerHTML = '';
+
+            fetch('/files')
+                .then(response => response.json())
+                .then(files => {
+                    files.forEach(file => {
+                        const card = document.createElement('div');
+                        card.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'flex', 'items-center', 'justify-between');
+                        card.innerHTML = `
+                            <div>
+                                <h4 class="text-lg font-bold text-white">${file}</h4>
+                                <a href="/uploads/${file}" download class="text-blue-400 hover:text-blue-500">Télécharger</a>
+                            </div>
+                            <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
+                        `;
+                        pdfsGrid.appendChild(card);
+                    });
+                });
+        }
+    }
+
+    const uploadForm = document.getElementById('upload-form');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('pdf-file');
+            const file = fileInput.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('pdf-file', file);
+
+                fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(result => {
+                    console.log(result);
+                    displayPdfs(); // Refresh the list of files
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
         });
     }
 
@@ -131,8 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');
 
-            const searchTerm = searchBar.value.toLowerCase();
-            displayResources(searchTerm, currentCategory);
+            if (currentCategory === 'pdfs') {
+                displayPdfs();
+            } else {
+                const searchTerm = searchBar.value.toLowerCase();
+                displayResources(searchTerm, currentCategory);
+            }
         });
     });
 

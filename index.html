@@ -11,14 +11,18 @@
 <body class="bg-gray-900 text-gray-200 font-sans">
     <div class="flex">
         <aside class="w-64 bg-gray-800 p-6 min-h-screen">
-            <h1 class="text-2xl font-bold text-white mb-8">Hub des 6A</h1>
+                        <div class="flex items-center mb-8">
+                <img src="images/network.svg" alt="Hub Logo" class="h-8 w-8 mr-2">
+                <h1 class="text-2xl font-bold text-white">Hub des 6A</h1>
+            </div>
             <nav>
                 <ul>
                     <li class="mb-4"><a href="#" id="dashboard-link" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-tachometer-alt mr-3"></i>Tableau de bord</a></li>
                     <li class="mb-4"><a href="#" id="favorites-link" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-star mr-3"></i>Mes Favoris</a></li>
                     <li class="mb-4"><a href="#" data-category="all" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-globe mr-3"></i>Toutes les catégories</a></li>
-                    <li class="mb-4"><a href="#" data-category="1000-mots" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-file-word mr-3"></i>1000 mots</a></li>
-                    <li class="mb-4"><a href="#" data-category="anglais" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-language mr-3"></i>Anglais</a></li>
+                                        <li class="mb-4"><a href="#" data-category="1000-mots" class="flex items-center text-gray-300 hover:text-white"><img src="images/school.svg" alt="School Logo" class="h-5 w-5 mr-3">1000 mots</a></li>
+                                        <li class="mb-4"><a href="#" data-category="anglais" class="flex items-center text-gray-300 hover:text-white"><img src="images/school.svg" alt="School Logo" class="h-5 w-5 mr-3">Anglais</a></li>
+                    <li class="mb-4"><a href="#" data-category="pdfs" class="flex items-center text-gray-300 hover:text-white"><img src="images/school.svg" alt="School Logo" class="h-5 w-5 mr-3">PDFs</a></li>
                 </ul>
             </nav>
         </aside>
@@ -50,6 +54,23 @@
                     <h3 class="text-xl font-bold text-white mb-4">Mes Favoris</h3>
                     <div id="favorites-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     </div>
+                </section>
+            </div>
+                    <div id="pdfs-content" class="hidden">
+                <section>
+                    <h3 class="text-xl font-bold text-white mb-4">Mes PDFs</h3>
+                    <div id="pdfs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+                </section>
+                <section class="mt-8">
+                    <h3 class="text-xl font-bold text-white mb-4">Uploader un PDF</h3>
+                    <form id="upload-form" class="bg-gray-800 p-6 rounded-lg">
+                        <div class="mb-4">
+                            <label for="pdf-file" class="block text-gray-300 mb-2">Sélectionner un fichier PDF</label>
+                            <input type="file" id="pdf-file" name="pdf-file" accept=".pdf" class="w-full bg-gray-700 text-white rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md">Uploader</button>
+                    </form>
                 </section>
             </div>
         </main>
