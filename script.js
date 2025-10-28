@@ -76,9 +76,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const filteredResources = resources.filter(resource => {
-                    const matchesCategory = categoryFilter === 'all' || resource.category === categoryFilter;
                     const matchesSearch = searchTerm === '' || resource.title.toLowerCase().includes(searchTerm) || resource.description.toLowerCase().includes(searchTerm);
-                    return matchesCategory && matchesSearch;
+                    if (!matchesSearch) {
+                        return false;
+                    }
+
+                    if (categoryFilter === 'all') {
+                        return resource.category !== 'pdfs';
+                    } else {
+                        return resource.category === categoryFilter;
+                    }
                 });
 
                 filteredResources.forEach(resource => {

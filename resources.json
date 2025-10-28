@@ -52,5 +52,14 @@
         "icon": "fas fa-file-pdf",
         "category": "pdfs",
         "type": "recent"
+    },
+    {
+        "id": 7,
+        "title": "Français",
+        "description": "Ressources pour la catégorie Français",
+        "url": "#",
+        "icon": "fas fa-language",
+        "category": "francais",
+        "type": "recent"
     }
 ]
