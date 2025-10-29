@@ -58,16 +58,14 @@ app.post('/upload', upload.single('pdf-file'), (req, res) => {
     });
 });
 
-app.get('/get-categories', (req, res) => {
-    const resourcesPath = path.join(__dirname, 'resources.json');
-    fs.readFile(resourcesPath, 'utf8', (err, data) => {
+app.get('/api/categories', (req, res) => {
+    const categoriesPath = path.join(__dirname, 'categories.json');
+    fs.readFile(categoriesPath, 'utf8', (err, data) => {
         if (err) {
             console.error(err);
-            return res.status(500).send('Erreur lors de la lecture du fichier resources.json.');
+            return res.status(500).send('Erreur lors de la lecture du fichier categories.json.');
         }
-        const resources = JSON.parse(data);
-        const categories = [...new Set(resources.map(resource => resource.category))];
-        res.json(categories);
+        res.json(JSON.parse(data));
     });
 });
 
@@ -87,36 +85,42 @@ app.get('/get-resources', (req, res) => {
     });
 });
 
-app.post('/add-category', express.json(), (req, res) => {
-    const { categoryName } = req.body;
-    const resourcesPath = path.join(__dirname, 'resources.json');
+app.post('/api/categories', express.json(), (req, res) => {
+    const { name, image } = req.body;
 
-    fs.readFile(resourcesPath, 'utf8', (err, data) => {
+    if (!name || !image) {
+        return res.status(400).send('Le nom et l\'image de la catégorie sont requis.');
+    }
+
+    const categoriesPath = path.join(__dirname, 'categories.json');
+
+    fs.readFile(categoriesPath, 'utf8', (err, data) => {
         if (err) {
             console.error(err);
-            return res.status(500).send('Erreur lors de la lecture du fichier resources.json.');
+            return res.status(500).send('Erreur lors de la lecture du fichier categories.json.');
         }
 
-        let resources = JSON.parse(data);
-        const newId = resources.length > 0 ? Math.max(...resources.map(r => r.id)) + 1 : 1;
-        const newResource = {
+        let categories = JSON.parse(data);
+        
+        const newId = name.toLowerCase().replace(/\s+/g, '-');
+        if (categories.some(c => c.id === newId)) {
+            return res.status(400).send('Une catégorie avec cet ID existe déjà.');
+        }
+
+        const newCategory = {
             id: newId,
-            title: `Nouvelle catégorie: ${categoryName}`,
-            description: `Ressource pour la catégorie ${categoryName}`,
-            url: '#',
-            icon: 'fas fa-folder',
-            category: categoryName,
-            type: 'recent'
+            name: name,
+            image: image
         };
 
-        resources.push(newResource);
+        categories.push(newCategory);
 
-        fs.writeFile(resourcesPath, JSON.stringify(resources, null, 4), 'utf8', (err) => {
+        fs.writeFile(categoriesPath, JSON.stringify(categories, null, 2), 'utf8', (err) => {
             if (err) {
                 console.error(err);
-                return res.status(500).send('Erreur lors de la mise à jour du fichier resources.json.');
+                return res.status(500).send('Erreur lors de la mise à jour du fichier categories.json.');
             }
-            res.status(200).send('Catégorie ajoutée avec succès !');
+            res.status(200).json(newCategory);
         });
     });
 });

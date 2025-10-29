@@ -1,0 +1,17 @@
+[
+  {
+    "id": "francais",
+    "name": "1000 mots",
+    "image": "https://i.imgur.com/cCWOMtT.png"
+  },
+  {
+    "id": "anglais",
+    "name": "Anglais",
+    "image": "https://i.imgur.com/MdwpUKT.png"
+  },
+  {
+    "id": "pdfs",
+    "name": "PDFs",
+    "image": "https://i.imgur.com/fj1U5pn.png"
+  }
+]

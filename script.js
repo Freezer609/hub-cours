@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const uploadSection = document.getElementById('upload-form')?.parentElement;
     const addResourceSection = document.getElementById('add-resource-form')?.parentElement;
+    const sidebarNavUl = document.querySelector('aside nav ul');
 
     if (uploadSection) uploadSection.style.display = 'none';
     if (addResourceSection) addResourceSection.style.display = 'none';
 
-    fetch('/get-categories')
+    fetch('/api/categories')
         .then(response => {
             if (!response.ok) throw new Error('Server not available');
             return response.json();
@@ -14,12 +15,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (uploadSection) uploadSection.style.display = 'block';
             if (addResourceSection) addResourceSection.style.display = 'block';
 
+            const categoryLinksHtml = categories.map(category => `
+                <li class="mb-4">
+                    <a href="#" data-category="${category.id}" class="flex items-center text-gray-300 hover:text-white">
+                        <img src="${category.image}" alt="${category.name} Icon" class="h-5 w-5 mr-3">
+                        ${category.name}
+                    </a>
+                </li>
+            `).join('');
+            
+            if (sidebarNavUl) {
+                const allCategoriesLink = sidebarNavUl.querySelector('a[data-category="all"]').parentElement;
+                allCategoriesLink.insertAdjacentHTML('afterend', categoryLinksHtml);
+            }
+
             const resourceCategorySelect = document.getElementById('resource-category');
             if (resourceCategorySelect) {
-                categories.filter(c => c !== 'pdfs').forEach(category => {
+                resourceCategorySelect.innerHTML = '';
+                categories.filter(c => c.id !== 'pdfs').forEach(category => {
                     const option = document.createElement('option');
-                    option.value = category;
-                    option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                    option.value = category.id;
+                    option.textContent = category.name;
                     resourceCategorySelect.appendChild(option);
                 });
             }
@@ -270,5 +286,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             displayResources();
+            const addCategoryForm = document.getElementById('add-category-form');
+            if (addCategoryForm) {
+                addCategoryForm.addEventListener('submit', e => {
+                    e.preventDefault();
+                    const categoryName = document.getElementById('category-name').value;
+                    const categoryImage = document.getElementById('category-image').value;
+
+                    if (!categoryName || !categoryImage) {
+                        alert('Veuillez remplir tous les champs.');
+                        return;
+                    }
+
+                    fetch('/api/categories', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: categoryName, image: categoryImage })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert('Erreur lors de la création de la catégorie.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error adding category:', error);
+                        alert('Erreur de connexion au serveur.');
+                    });
+                });
+            }
         });
 });

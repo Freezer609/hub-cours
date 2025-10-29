@@ -20,9 +20,7 @@
                     <li class="mb-4"><a href="#" id="dashboard-link" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-tachometer-alt mr-3"></i>Tableau de bord</a></li>
                     <li class="mb-4"><a href="#" id="favorites-link" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-star mr-3"></i>Mes Favoris</a></li>
                     <li class="mb-4"><a href="#" data-category="all" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-globe mr-3"></i>Toutes les catégories</a></li>
-                                        <li class="mb-4"><a href="#" data-category="francais" class="flex items-center text-gray-300 hover:text-white"><img src="https://i.imgur.com/cCWOMtT.png" alt="Français Icon" class="h-5 w-5 mr-3">1000 mots</a></li>
-                                        <li class="mb-4"><a href="#" data-category="anglais" class="flex items-center text-gray-300 hover:text-white"><img src="https://i.imgur.com/MdwpUKT.png" alt="Anglais Icon" class="h-5 w-5 mr-3">Anglais</a></li>
-                    <li class="mb-4"><a href="#" data-category="pdfs" class="flex items-center text-gray-300 hover:text-white"><img src="https://i.imgur.com/fj1U5pn.png" alt="PDF Icon" class="h-5 w-5 mr-3">PDFs</a></li>
+
                 </ul>
             </nav>
         </aside>
@@ -71,7 +69,22 @@
                                 <!-- Options will be populated dynamically -->
                             </select>
                         </div>
-                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md">Ajouter la Ressource</button>
+                        </form>
+                </section>
+                <section class="mt-8">
+                    <h3 class="text-xl font-bold text-white mb-4">Ajouter une Catégorie</h3>
+                    <form id="add-category-form" class="bg-gray-800 p-6 rounded-lg">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="mb-4">
+                                <label for="category-name" class="block text-gray-300 mb-2">Nom de la Catégorie</label>
+                                <input type="text" id="category-name" name="category-name" required class="w-full bg-gray-700 text-white rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="category-image" class="block text-gray-300 mb-2">URL de l'image (Imgur, etc.)</label>
+                                <input type="url" id="category-image" name="category-image" required class="w-full bg-gray-700 text-white rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md">Ajouter la Catégorie</button>
                     </form>
                 </section>
             </div>
