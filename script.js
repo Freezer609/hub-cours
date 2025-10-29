@@ -28,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `).join('');
             
             if (sidebarNavUl) {
-                const allCategoriesLink = sidebarNavUl.querySelector('a[data-category="all"]').parentElement;
-                allCategoriesLink.insertAdjacentHTML('afterend', categoryLinksHtml);
+                sidebarNavUl.innerHTML += categoryLinksHtml;
             }
 
             const resourceCategorySelect = document.getElementById('resource-category');
