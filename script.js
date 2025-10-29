@@ -233,6 +233,7 @@ function initializePage(categories, resources, isServerUp) {
         if (currentCategory === 'pdfs') {
             displayPdfs();
         } else {
+            const searchTerm = searchBar.value.toLowerCase();
             displayResources(searchTerm, currentCategory);
         }
     });
