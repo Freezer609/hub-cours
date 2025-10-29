@@ -3,33 +3,24 @@
  * C'est le point d'entrée de toute notre logique.
  */
 document.addEventListener('DOMContentLoaded', () => {
+    // On lance les requêtes pour les fichiers locaux essentiels.
+    const categoriesPromise = fetch('categories.json').then(res => res.json());
+    const resourcesPromise = fetch('resources.json').then(res => res.json());
 
-    // On essaie de récupérer les catégories depuis le serveur. 
-    // Si ça marche, le serveur est actif. Sinon, on considère qu'il est éteint.
-    const serverCheck = fetch('/api/categories').then(res => {
-        if (!res.ok) throw new Error('Server not available');
-        return res.json();
-    });
+    // En parallèle, on vérifie si le serveur est actif.
+    const serverStatusPromise = fetch('/api/categories').then(res => res.ok)
+                                                          .catch(() => false); // En cas d'échec réseau, le serveur est considéré comme inactif.
 
-    // On récupère aussi les ressources depuis le fichier JSON local.
-    const resourcesCheck = fetch('resources.json').then(res => res.json());
-
-    /**
-     * Promise.all est une super astuce. Elle nous permet d'attendre que PLUSIEURS opérations asynchrones (nos deux fetch)
-     * soient terminées avant de continuer. C'est beaucoup plus propre que d'imbriquer les .then().
-     */
-    Promise.all([serverCheck, resourcesCheck])
-        .then(([categories, resources]) => {
-            // Si tout s'est bien passé (serveur ET ressources locales OK), on initialise la page en mode "serveur actif".
-            initializePage(categories, resources, true);
+    // On attend que tout soit terminé.
+    Promise.all([categoriesPromise, resourcesPromise, serverStatusPromise])
+        .then(([categories, resources, isServerUp]) => {
+            // Une fois qu'on a toutes les infos, on construit la page.
+            initializePage(categories, resources, isServerUp);
         })
         .catch(error => {
-            // Si une des promesses échoue (probablement le serverCheck), on entre dans le .catch.
-            console.log("Initialisation en mode hors-ligne: ", error.message);
-            // On continue quand même en chargeant juste les ressources locales, et on initialise la page en mode "hors-ligne".
-            resourcesCheck.then(resources => {
-                initializePage([], resources, false);
-            });
+            // Cette erreur ne devrait se produire que si resources.json ou categories.json est manquant ou invalide.
+            console.error("Erreur critique: Impossible de charger les fichiers de données locaux.", error);
+            document.body.innerHTML = "<h1>Erreur critique: Impossible de charger les données du site.</h1>";
         });
 });
 
