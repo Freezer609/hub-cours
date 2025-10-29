@@ -1,73 +1,83 @@
+<!--
+  Structure principale du document HTML.
+  Auteur: Gemini
+  Date: 29/10/2025
+-->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hub des 6A</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Dépendances externes -->
+    <link rel="stylesheet" href="style.css"> <!-- Feuille de style locale -->
+    <script src="https://cdn.tailwindcss.com"></script> <!-- Framework CSS Tailwind -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Icônes Font Awesome -->
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans">
     <div class="flex">
 
-        <!-- ===== Barre de Navigation Latérale (Sidebar) ===== -->
+        <!-- SECTION: Barre de Navigation Latérale (Sidebar) -->
         <aside class="w-64 bg-gray-800 p-6 min-h-screen">
-            <!-- Logo et Titre -->
+            <!-- En-tête de la Sidebar -->
             <div class="flex items-center mb-8">
                 <img src="images/network.svg" alt="Hub Logo" class="h-8 w-8 mr-2">
                 <h1 class="text-2xl font-bold text-white">Hub des 6A</h1>
             </div>
 
-            <!-- Menu de Navigation -->
+            <!-- Menu de Navigation Principal -->
             <nav>
                 <ul>
-                    <!-- Liens statiques -->
+                    <!-- Liens de navigation statiques -->
                     <li class="mb-4"><a href="#" id="dashboard-link" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-tachometer-alt mr-3"></i>Tableau de bord</a></li>
                     <li class="mb-4"><a href="#" id="favorites-link" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-star mr-3"></i>Mes Favoris</a></li>
                     <li class="mb-4"><a href="#" data-category="all" class="flex items-center text-gray-300 hover:text-white"><i class="fas fa-globe mr-3"></i>Toutes les catégories</a></li>
                     
-                    <!-- Les catégories dynamiques seront injectées ici par le script.js -->
+                    <!-- Point d'injection pour les catégories dynamiques (via script.js) -->
                 </ul>
             </nav>
         </aside>
 
-        <!-- ===== Contenu Principal ===== -->
+        <!-- SECTION: Contenu Principal -->
         <main class="flex-1 p-8">
-            <!-- En-tête avec titre et barre de recherche -->
+            <!-- En-tête du contenu principal -->
             <header class="flex justify-between items-center mb-8">
                 <div class="flex items-center">
+                    <!-- Bouton pour le menu mobile (visible uniquement sur petits écrans) -->
                     <button id="menu-toggle" class="text-white text-2xl md:hidden mr-4">
                         <i class="fas fa-bars"></i>
                     </button>
                     <div>
-                        <h2 class="text-3xl font-bold text-white">Content de vous revoir, la 6A !</h2>
+                        <h2 class="text-3xl font-bold text-white">Lobby des cours (6A)</h2>
                         <p class="text-gray-400">Votre hub centralisé pour tous les supports d'étude.</p>
                     </div>
                 </div>
+                <!-- Composant de recherche -->
                 <div class="relative">
                     <input type="text" id="search-bar" placeholder="Rechercher des ressources..." class="bg-gray-700 text-white rounded-full py-2 px-4 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                 </div>
             </header>
 
-            <!-- Conteneur pour le contenu principal (dashboard) -->
+            <!-- Conteneur pour le contenu dynamique principal (Dashboard) -->
             <div id="main-content">
-                <!-- Section Accès Rapide (actuellement non utilisée) -->
+                <!-- Grille pour les ressources "Accès Rapide" -->
                 <section>
                     <h3 class="text-xl font-bold text-white mb-4">Accès Rapide</h3>
                     <div id="quick-access-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Les cartes de ressources sont injectées ici par script.js -->
                     </div>
                 </section>
 
-                <!-- Section Ajouts Récents -->
+                <!-- Grille pour les ressources "Ajouts Récents" -->
                 <section class="mt-8">
                     <h3 class="text-xl font-bold text-white mb-4">Ajouts Récents</h3>
                     <div id="recently-added-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Les cartes de ressources sont injectées ici par script.js -->
                     </div>
                 </section>
 
-                <!-- Formulaire pour Ajouter une Ressource (Lien) -->
+                <!-- Formulaire: Ajouter une Ressource (Lien) -->
                 <section class="mt-8">
                     <h3 class="text-xl font-bold text-white mb-4">Ajouter une Ressource</h3>
                     <form id="add-resource-form" class="bg-gray-800 p-6 rounded-lg">
@@ -88,14 +98,14 @@
                         <div class="mb-4">
                             <label for="resource-category" class="block text-gray-300 mb-2">Catégorie</label>
                             <select id="resource-category" name="resource-category" required class="w-full bg-gray-700 text-white rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <!-- Les options sont peuplées par script.js -->
+                                <!-- Les options sont injectées par script.js -->
                             </select>
                         </div>
                         <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md">Ajouter la Ressource</button>
                     </form>
                 </section>
 
-                <!-- Formulaire pour Ajouter une Catégorie -->
+                <!-- Formulaire: Ajouter une Catégorie -->
                 <section class="mt-8">
                     <h3 class="text-xl font-bold text-white mb-4">Ajouter une Catégorie</h3>
                     <form id="add-category-form" class="bg-gray-800 p-6 rounded-lg">
@@ -114,23 +124,25 @@
                 </section>
             </div>
 
-            <!-- Conteneur pour la page "Mes Favoris" (caché par défaut) -->
+            <!-- Conteneur pour la vue "Favoris" (caché par défaut) -->
             <div id="favorites-content" class="hidden">
                 <section>
                     <h3 class="text-xl font-bold text-white mb-4">Mes Favoris</h3>
                     <div id="favorites-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Les favoris sont injectés ici par script.js -->
                     </div>
                 </section>
             </div>
 
-            <!-- Conteneur pour la page "PDFs" (caché par défaut) -->
+            <!-- Conteneur pour la vue "PDFs" (caché par défaut) -->
             <div id="pdfs-content" class="hidden">
                 <section>
                     <h3 class="text-xl font-bold text-white mb-4">Mes PDFs</h3>
                     <div id="pdfs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Les PDFs sont injectés ici par script.js -->
                     </div>
                 </section>
-                <!-- Formulaire pour Uploader un PDF -->
+                <!-- Formulaire: Uploader un PDF -->
                 <section class="mt-8">
                     <h3 class="text-xl font-bold text-white mb-4">Uploader un PDF</h3>
                     <form id="upload-form" class="bg-gray-800 p-6 rounded-lg">
@@ -145,7 +157,7 @@
         </main>
     </div>
 
-    <!-- On charge le script principal à la toute fin pour s'assurer que le HTML est prêt. -->
+    <!-- Le script principal est chargé en dernier pour garantir que le DOM est entièrement parsé. -->
     <script src="script.js"></script>
 </body>
 </html>

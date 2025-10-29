@@ -1,6 +1,10 @@
-/* --- Styles Généraux --- */
+/**
+ * @file Feuille de style principale.
+ * @description Contient les styles personnalisés pour le Hub, en complément de Tailwind CSS.
+ */
 
-/* On importe la police "Inter" depuis Google Fonts pour un look moderne. */
+/* --- Dépendances et Styles de Base --- */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
 body {
@@ -9,19 +13,19 @@ body {
 
 /* --- Barre de Navigation (Sidebar) --- */
 
-/* Style pour le lien de la catégorie active dans le menu. */
+/* Style appliqué au lien de la catégorie actuellement sélectionnée. */
 aside nav a.active {
     color: white;
-    background-color: #1e3a8a; /* Un bleu foncé pour le contraste */
+    background-color: #1e3a8a; /* Bleu foncé pour un contraste clair. */
     border-radius: 0.375rem;
     padding: 0.5rem 1rem;
 }
 
-/* --- Styles des Cartes de Ressource --- */
+/* --- Composant "Carte" --- */
 
-/* Style de base pour chaque carte. */
+/* Style de base pour les cartes de ressources. */
 .card {
-    background-color: #1f2937; /* Gris très foncé */
+    background-color: #1f2937; /* Gris-bleu foncé. */
     border-radius: 0.75rem;
     padding: 1.5rem;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -31,13 +35,13 @@ aside nav a.active {
     justify-content: space-between;
 }
 
-/* Effet de survol pour donner l'impression que la carte se soulève. */
+/* Effet de survol pour une meilleure UX. */
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* Style pour l'icône en haut de la carte. */
+/* Conteneur pour l'icône Font Awesome sur la carte. */
 .card .card-icon {
     font-size: 1.5rem;
     width: 3.5rem;
@@ -59,7 +63,7 @@ aside nav a.active {
 .card .card-description {
     font-size: 0.875rem;
     color: #9ca3af;
-    flex-grow: 1; /* Permet à la description de prendre l'espace disponible. */
+    flex-grow: 1; /* Assure que la carte garde une hauteur constante même avec des descriptions courtes. */
     margin-bottom: 1rem;
 }
 
@@ -75,33 +79,36 @@ aside nav a.active {
     color: #3b82f6;
 }
 
-/* --- Couleurs des Icônes --- */
-/* Classes utilitaires pour donner une couleur de fond à chaque type de catégorie. */
+/* --- Classes utilitaires pour les couleurs d'icônes --- */
+/* Permet d'assigner une couleur de fond par catégorie. */
 .math-icon { background-color: #3b82f6; color: white; }
 .science-icon { background-color: #10b981; color: white; }
 .history-icon { background-color: #f97316; color: white; }
 .coding-icon { background-color: #8b5cf6; color: white; }
 .1000-mots-icon { background-color: #3b82f6; color: white; }
 .anglais-icon { background-color: #10b981; color: white; }
-.francais-icon { background-color: #3b82f6; color: white; } /* Ajout pour la catégorie français */
+.francais-icon { background-color: #3b82f6; color: white; }
 
 
-/* --- Styles pour les petits écrans (Responsive) --- */
+/* --- Media Queries pour le design responsive --- */
 
 @media (max-width: 768px) {
+
+    /* Logique du menu latéral coulissant (off-canvas) */
     aside {
-        position: fixed; /* On le positionne par rapport à la fenêtre du navigateur */
+        position: fixed;
         top: 0;
         left: 0;
         height: 100%;
-        transform: translateX(-100%); /* On le sort de l'écran par la gauche */
-        transition: transform 0.3s ease-in-out; /* Animation de glissement */
-        z-index: 40; /* On s'assure qu'il passe au-dessus du contenu principal */
-        padding-top: 4rem; /* Un peu d'espace en haut */
+        transform: translateX(-100%); /* Caché par défaut */
+        transition: transform 0.3s ease-in-out;
+        z-index: 40; /* Assure qu'il est au-dessus du contenu principal */
+        padding-top: 4rem;
     }
 
+    /* Classe togglée par JS pour faire apparaître le menu */
     aside.sidebar-open {
-        transform: translateX(0); /* La classe qui fait revenir le menu */
+        transform: translateX(0);
     }
 
     main {

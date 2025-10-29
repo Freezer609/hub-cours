@@ -1,44 +1,48 @@
 /**
- * Attend que le contenu de la page soit entièrement chargé pour lancer le script.
- * C'est le point d'entrée de toute notre logique.
+ * @file Point d'entrée principal de la logique client pour le Hub.
+ * Gère le chargement des données, l'initialisation de l'état de l'application et l'enregistrement des écouteurs d'événements.
  */
+
 document.addEventListener('DOMContentLoaded', () => {
-    // On lance les requêtes pour les fichiers locaux essentiels.
+    /**
+     * Stratégie d'initialisation :
+     * 1. Tente de fetch les catégories depuis l'endpoint de l'API. Le succès/échec de cette promesse détermine le statut du serveur.
+     * 2. En parallèle, fetch les données statiques (catégories locales, ressources) depuis les fichiers JSON.
+     * 3. Promise.all est utilisé pour attendre la résolution de toutes les promesses initiales.
+     * 4. Une fois les données disponibles, la fonction initializePage() est appelée pour hydrater le DOM.
+     * 5. En cas d'échec de l'API, un fallback sur les données locales est effectué pour assurer le fonctionnement en mode client-side pur.
+     */
     const categoriesPromise = fetch('categories.json').then(res => res.json());
     const resourcesPromise = fetch('resources.json').then(res => res.json());
+    const serverStatusPromise = fetch('/api/categories').then(res => res.ok).catch(() => false);
 
-    // En parallèle, on vérifie si le serveur est actif.
-    const serverStatusPromise = fetch('/api/categories').then(res => res.ok)
-                                                          .catch(() => false); // En cas d'échec réseau, le serveur est considéré comme inactif.
-
-    // On attend que tout soit terminé.
     Promise.all([categoriesPromise, resourcesPromise, serverStatusPromise])
         .then(([categories, resources, isServerUp]) => {
-            // Une fois qu'on a toutes les infos, on construit la page.
             initializePage(categories, resources, isServerUp);
         })
         .catch(error => {
-            // Cette erreur ne devrait se produire que si resources.json ou categories.json est manquant ou invalide.
-            console.error("Erreur critique: Impossible de charger les fichiers de données locaux.", error);
+            console.error("Fatal Error: Could not load local data files (resources.json or categories.json).", error);
             document.body.innerHTML = "<h1>Erreur critique: Impossible de charger les données du site.</h1>";
         });
 });
 
 /**
- * C'est la fonction principale qui met en place toute la page.
- * Elle prend les données en entrée et décide quoi afficher.
- * @param {Array} categories - La liste des catégories (peut être vide si le serveur est inactif).
- * @param {Array} resources - La liste des ressources.
- * @param {boolean} isServerUp - Un drapeau pour savoir si le serveur est actif.
+ * Fonction principale d'hydratation et d'initialisation de l'application.
+ * Responsable du rendu conditionnel de l'UI, de la construction du DOM dynamique et de l'enregistrement des écouteurs d'événements.
+ * @param {object[]} categories - Données des catégories.
+ * @param {object[]} resources - Données des ressources.
+ * @param {boolean} isServerUp - Flag indiquant si l'API serveur est accessible.
  */
 function initializePage(categories, resources, isServerUp) {
+    // Mise en cache des sélecteurs DOM pour la performance.
     const uploadSection = document.getElementById('upload-form')?.parentElement;
     const addResourceSection = document.getElementById('add-resource-form')?.parentElement;
     const addCategorySection = document.getElementById('add-category-form')?.parentElement;
     const sidebarNavUl = document.querySelector('aside nav ul');
     const resourceCategorySelect = document.getElementById('resource-category');
 
-    // On construit TOUJOURS la barre latérale et le menu déroulant si on a les données, peu importe le statut du serveur.
+    // Injection dynamique des catégories dans la sidebar et les dropdowns.
+    // Cette opération est découplée du statut du serveur et ne dépend que de la disponibilité des données locales.
     if (categories && categories.length > 0) {
         const categoryLinksHtml = categories.map(category => `
             <li class="mb-4">
@@ -62,7 +66,7 @@ function initializePage(categories, resources, isServerUp) {
         }
     }
 
-    // La visibilité des formulaires est la SEULE chose qui dépend du serveur.
+    // Rendu conditionnel des composants UI qui dépendent du serveur.
     if (isServerUp) {
         if (uploadSection) uploadSection.style.display = 'block';
         if (addResourceSection) addResourceSection.style.display = 'block';
@@ -72,7 +76,8 @@ function initializePage(categories, resources, isServerUp) {
         if (addResourceSection) addResourceSection.style.display = 'none';
         if (addCategorySection) addCategorySection.style.display = 'none';
     }
-    // --- Définition des variables et fonctions principales ---
+
+    // Initialisation de l'état de l'application et des variables locales.
     const quickAccessGrid = document.getElementById('quick-access-grid');
     const recentlyAddedGrid = document.getElementById('recently-added-grid');
     const favoritesGrid = document.getElementById('favorites-grid');
@@ -83,13 +88,13 @@ function initializePage(categories, resources, isServerUp) {
     const favoritesContent = document.getElementById('favorites-content');
     const pdfsContent = document.getElementById('pdfs-content');
     
-    let currentCategory = 'all';
-    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    let currentCategory = 'all'; // État du filtre de catégorie actuel.
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || []; // Persistance des favoris via le localStorage.
 
     /**
-     * Crée une "carte" de ressource HTML à partir d'un objet ressource.
-     * @param {object} resource - L'objet contenant les infos de la ressource.
-     * @returns {HTMLElement} L'élément de la carte prêt à être ajouté au DOM.
+     * Construit un élément de carte de ressource.
+     * @param {object} resource - L'objet ressource.
+     * @returns {HTMLElement} L'élément DOM de la carte.
      */
     function createResourceCard(resource) {
         const cardWrapper = document.createElement('div');
@@ -100,16 +105,16 @@ function initializePage(categories, resources, isServerUp) {
         card.classList.add('card');
         card.dataset.category = resource.category;
         const iconClass = resource.category.toLowerCase() + '-icon';
-        card.innerHTML = `
-            <div class="card-icon ${iconClass}">
-                <i class="${resource.icon}"></i>
+        card.innerHTML = "`
+            <div class=\"card-icon ${iconClass}\">
+                <i class=\"" + resource.icon + "\"></i>
             </div>
             <div>
-                <h4 class="card-title">${resource.title}</h4>
-                <p class="card-description">${resource.description}</p>
-                <span class="card-link">Voir la Ressource &rarr;</span>
+                <h4 class=\"card-title\">${resource.title}</h4>
+                <p class=\"card-description\">${resource.description}</p>
+                <span class=\"card-link\">Voir la Ressource &rarr;</span>
             </div>
-        `;
+        `";
         const favoriteIcon = document.createElement('i');
         favoriteIcon.classList.add('fas', 'fa-star', 'absolute', 'top-4', 'right-4', 'cursor-pointer', 'text-gray-500');
         if (favorites.includes(resource.id)) {
@@ -127,8 +132,8 @@ function initializePage(categories, resources, isServerUp) {
     }
 
     /**
-     * Ajoute ou retire une ressource des favoris et sauvegarde dans le localStorage.
-     * @param {number} id - L'ID de la ressource à gérer.
+     * Gère l'état des favoris (ajout/suppression).
+     * @param {number} id - L'ID de la ressource.
      */
     function toggleFavorite(id) {
         const index = favorites.indexOf(id);
@@ -141,9 +146,9 @@ function initializePage(categories, resources, isServerUp) {
     }
 
     /**
-     * Affiche les ressources en fonction du terme de recherche et de la catégorie sélectionnée.
-     * @param {string} searchTerm - Le texte de la barre de recherche.
-     * @param {string} categoryFilter - La catégorie à afficher.
+     * Filtre et affiche les ressources dans le DOM.
+     * @param {string} [searchTerm=''] - Terme de recherche optionnel.
+     * @param {string} [categoryFilter='all'] - Filtre de catégorie optionnel.
      */
     function displayResources(searchTerm = '', categoryFilter = 'all') {
         quickAccessGrid.innerHTML = '';
@@ -169,7 +174,7 @@ function initializePage(categories, resources, isServerUp) {
         });
     }
 
-    /** Affiche uniquement les ressources marquées comme favorites. */
+    /** Gère l'affichage de la vue "Favoris". */
     function displayFavorites() {
         favoritesGrid.innerHTML = '';
         mainContent.classList.add('hidden');
@@ -182,21 +187,21 @@ function initializePage(categories, resources, isServerUp) {
         });
     }
 
-    /** Crée une carte spécifique pour les fichiers PDF. */
+    /** Construit une carte pour un item PDF. */
     function createPdfCard(resource) {
         const card = document.createElement('div');
         card.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'flex', 'items-center', 'justify-between');
-        card.innerHTML = `
+        card.innerHTML = "`
             <div>
-                <h4 class="text-lg font-bold text-white">${resource.title}</h4>
-                <a href="${resource.url}" download class="text-blue-400 hover:text-blue-500">Télécharger</a>
+                <h4 class=\"text-lg font-bold text-white\">${resource.title}</h4>
+                <a href=\"${resource.url}\" download class=\"text-blue-400 hover:text-blue-500\">Télécharger</a>
             </div>
-            <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
-        `;
+            <i class=\"fas fa-file-pdf text-red-500 text-2xl\"></i>
+        `";
         return card;
     }
 
-    /** Affiche la page dédiée aux PDFs. */
+    /** Gère l'affichage de la vue "PDFs". */
     function displayPdfs() {
         mainContent.classList.add('hidden');
         favoritesContent.classList.add('hidden');
@@ -212,20 +217,24 @@ function initializePage(categories, resources, isServerUp) {
         }
     }
 
-    // --- Écouteurs d'événements (Interactions de l'utilisateur) ---
+    // --- Enregistrement des écouteurs d'événements ---
 
-    // Barre de recherche
     searchBar.addEventListener('input', () => {
         const searchTerm = searchBar.value.toLowerCase();
         displayResources(searchTerm, currentCategory);
     });
 
-    // Navigation dans la barre latérale (utilise la délégation d'événement)
+    // Utilisation de la délégation d'événement sur la navigation pour gérer les clics sur les liens dynamiques.
     const sidebarNav = document.querySelector('aside nav');
     sidebarNav.addEventListener('click', e => {
         const link = e.target.closest('a[data-category]');
-        if (!link) return; // On s'assure qu'on a bien cliqué sur un lien de catégorie
+        if (!link) return;
         e.preventDefault();
+
+        if (sidebar.classList.contains('sidebar-open')) {
+            sidebar.classList.remove('sidebar-open');
+        }
+
         currentCategory = link.dataset.category;
         const allCategoryLinks = sidebarNav.querySelectorAll('a[data-category]');
         allCategoryLinks.forEach(l => l.classList.remove('active'));
@@ -238,7 +247,6 @@ function initializePage(categories, resources, isServerUp) {
         }
     });
 
-    // Liens statiques de la barre latérale
     dashboardLink.addEventListener('click', (e) => {
         e.preventDefault();
         currentCategory = 'all';
@@ -253,7 +261,7 @@ function initializePage(categories, resources, isServerUp) {
         displayFavorites();
     });
 
-    // Formulaire d'upload de PDF
+    // Gestionnaires de soumission pour les formulaires.
     const uploadForm = document.getElementById('upload-form');
     if (uploadForm) {
         uploadForm.addEventListener('submit', (e) => {
@@ -267,14 +275,13 @@ function initializePage(categories, resources, isServerUp) {
                     .then(response => response.text())
                     .then(result => {
                         console.log(result);
-                        location.reload(); // On recharge la page pour voir le nouveau fichier
+                        location.reload();
                     })
                     .catch(error => console.error('Error:', error));
             }
         });
     }
 
-    // Formulaire pour ajouter une ressource (lien)
     const addResourceForm = document.getElementById('add-resource-form');
     if (addResourceForm) {
         addResourceForm.addEventListener('submit', (e) => {
@@ -301,7 +308,6 @@ function initializePage(categories, resources, isServerUp) {
         });
     }
 
-    // Formulaire pour ajouter une catégorie
     const addCategoryForm = document.getElementById('add-category-form');
     if (addCategoryForm) {
         addCategoryForm.addEventListener('submit', e => {
@@ -328,23 +334,17 @@ function initializePage(categories, resources, isServerUp) {
         });
     }
 
-    // Affiche les ressources par défaut au premier chargement.
-    displayResources();
-
     // --- Logique pour le menu Hamburger sur mobile ---
     const menuToggle = document.getElementById('menu-toggle');
     const sidebar = document.querySelector('aside');
 
     if (menuToggle && sidebar) {
-        menuToggle.addEventListener('click', () => {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
             sidebar.classList.toggle('sidebar-open');
         });
-
-        // Bonus : on ferme le menu si l'utilisateur clique en dehors.
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target) && sidebar.classList.contains('sidebar-open')) {
-                sidebar.classList.remove('sidebar-open');
-            }
-        });
     }
+
+    // Appel initial pour afficher les ressources par défaut.
+    displayResources();
 }
