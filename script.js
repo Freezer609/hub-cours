@@ -330,4 +330,21 @@ function initializePage(categories, resources, isServerUp) {
 
     // Affiche les ressources par défaut au premier chargement.
     displayResources();
+
+    // --- Logique pour le menu Hamburger sur mobile ---
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('aside');
+
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-open');
+        });
+
+        // Bonus : on ferme le menu si l'utilisateur clique en dehors.
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target) && sidebar.classList.contains('sidebar-open')) {
+                sidebar.classList.remove('sidebar-open');
+            }
+        });
+    }
 }

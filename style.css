@@ -89,26 +89,35 @@ aside nav a.active {
 /* --- Styles pour les petits écrans (Responsive) --- */
 
 @media (max-width: 768px) {
-    /* On passe en affichage vertical pour le corps principal et la sidebar. */
-    .flex {
-        flex-direction: column;
-    }
     aside {
-        width: 100%;
-        min-height: auto;
-        padding-bottom: 1rem;
+        position: fixed; /* On le positionne par rapport à la fenêtre du navigateur */
+        top: 0;
+        left: 0;
+        height: 100%;
+        transform: translateX(-100%); /* On le sort de l'écran par la gauche */
+        transition: transform 0.3s ease-in-out; /* Animation de glissement */
+        z-index: 40; /* On s'assure qu'il passe au-dessus du contenu principal */
+        padding-top: 4rem; /* Un peu d'espace en haut */
     }
+
+    aside.sidebar-open {
+        transform: translateX(0); /* La classe qui fait revenir le menu */
+    }
+
     main {
         padding: 1.5rem;
     }
+
     header {
         flex-direction: column;
         align-items: flex-start;
     }
+
     header .relative {
         margin-top: 1rem;
         width: 100%;
     }
+
     #search-bar {
         width: 100%;
     }
