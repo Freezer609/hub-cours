@@ -1,19 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
     const uploadSection = document.getElementById('upload-form')?.parentElement;
-    if (uploadSection) {
-        // Hide it by default, then check if we can show it.
-        uploadSection.style.display = 'none';
-        fetch('/get-categories')
-            .then(response => {
-                if (response.ok) {
-                    // Server is up, show the form.
-                    uploadSection.style.display = 'block';
-                }
-            })
-            .catch(() => {
-                // Server is down, the form remains hidden.
-            });
-    }
+    const addResourceSection = document.getElementById('add-resource-form')?.parentElement;
+
+    if (uploadSection) uploadSection.style.display = 'none';
+    if (addResourceSection) addResourceSection.style.display = 'none';
+
+    fetch('/get-categories')
+        .then(response => {
+            if (!response.ok) throw new Error('Server not available');
+            return response.json();
+        })
+        .then(categories => {
+            if (uploadSection) uploadSection.style.display = 'block';
+            if (addResourceSection) addResourceSection.style.display = 'block';
+
+            const resourceCategorySelect = document.getElementById('resource-category');
+            if (resourceCategorySelect) {
+                categories.filter(c => c !== 'pdfs').forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                    resourceCategorySelect.appendChild(option);
+                });
+            }
+        })
+        .catch(error => {
+            console.log("Server not detected. Hiding server-dependent UI elements.");
+        });
 
     fetch('resources.json')
         .then(response => response.json())
@@ -225,20 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const resourceCategorySelect = document.getElementById('resource-category');
 
             if (addResourceForm && resourceCategorySelect) {
-                fetch('/get-categories')
-                    .then(response => response.json())
-                    .then(categories => {
-                        categories.filter(c => c !== 'pdfs').forEach(category => {
-                            const option = document.createElement('option');
-                            option.value = category;
-                            option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-                            resourceCategorySelect.appendChild(option);
-                        });
-                    })
-                    .catch(err => {
-                        addResourceForm.style.display = 'none';
-                    });
-
                 addResourceForm.addEventListener('submit', (e) => {
                     e.preventDefault();
 
