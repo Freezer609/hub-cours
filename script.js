@@ -32,43 +32,25 @@ document.addEventListener('DOMContentLoaded', () => {
  * @param {boolean} isServerUp - Un drapeau pour savoir si le serveur est actif.
  */
 function initializePage(categories, resources, isServerUp) {
-    
-    // --- Sélection des éléments du DOM --- 
-    // On récupère tous les éléments de la page dont on aura besoin.
     const uploadSection = document.getElementById('upload-form')?.parentElement;
     const addResourceSection = document.getElementById('add-resource-form')?.parentElement;
     const addCategorySection = document.getElementById('add-category-form')?.parentElement;
     const sidebarNavUl = document.querySelector('aside nav ul');
     const resourceCategorySelect = document.getElementById('resource-category');
 
-    // --- Logique d'affichage (en fonction du serveur) ---
-    if (isServerUp) {
-        // Si le serveur est actif, on affiche les sections qui en dépendent.
-        if (uploadSection) uploadSection.style.display = 'block';
-        if (addResourceSection) addResourceSection.style.display = 'block';
-        if (addCategorySection) addCategorySection.style.display = 'block';
-
-        // On construit dynamiquement la barre de navigation avec les catégories.
+    // On construit TOUJOURS la barre latérale et le menu déroulant si on a les données, peu importe le statut du serveur.
+    if (categories && categories.length > 0) {
+        const categoryLinksHtml = categories.map(category => `
+            <li class="mb-4">
+                <a href="#" data-category="${category.id}" class="flex items-center text-gray-300 hover:text-white">
+                    <img src="${category.image}" alt="${category.name} Icon" class="h-5 w-5 mr-3">
+                    ${category.name}
+                </a>
+            </li>
+        `).join('');
         if (sidebarNavUl) {
-            categories.forEach(category => {
-                const li = document.createElement('li');
-                li.className = 'mb-4';
-                const a = document.createElement('a');
-                a.href = '#';
-                a.dataset.category = category.id;
-                a.className = 'flex items-center text-gray-300 hover:text-white';
-                const img = document.createElement('img');
-                img.src = category.image;
-                img.alt = `${category.name} Icon`;
-                img.className = 'h-5 w-5 mr-3';
-                a.appendChild(img);
-                a.append(` ${category.name}`);
-                li.appendChild(a);
-                sidebarNavUl.appendChild(li);
-            });
+            sidebarNavUl.innerHTML += categoryLinksHtml;
         }
-
-        // On remplit aussi le menu déroulant dans le formulaire "Ajouter une ressource".
         if (resourceCategorySelect) {
             resourceCategorySelect.innerHTML = '';
             categories.filter(c => c.id !== 'pdfs').forEach(category => {
@@ -78,13 +60,18 @@ function initializePage(categories, resources, isServerUp) {
                 resourceCategorySelect.appendChild(option);
             });
         }
+    }
+
+    // La visibilité des formulaires est la SEULE chose qui dépend du serveur.
+    if (isServerUp) {
+        if (uploadSection) uploadSection.style.display = 'block';
+        if (addResourceSection) addResourceSection.style.display = 'block';
+        if (addCategorySection) addCategorySection.style.display = 'block';
     } else {
-        // Si le serveur est inactif, on s'assure que ces sections sont bien cachées.
         if (uploadSection) uploadSection.style.display = 'none';
         if (addResourceSection) addResourceSection.style.display = 'none';
         if (addCategorySection) addCategorySection.style.display = 'none';
     }
-
     // --- Définition des variables et fonctions principales ---
     const quickAccessGrid = document.getElementById('quick-access-grid');
     const recentlyAddedGrid = document.getElementById('recently-added-grid');
