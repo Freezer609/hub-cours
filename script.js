@@ -40,33 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     option.value = category.id;
                     option.textContent = category.name;
                     resourceCategorySelect.appendChild(option);
-                });
-            }
 
-            const categoryLinksHtml = categories.map(category => `
-                <li class="mb-4">
-                    <a href="#" data-category="${category.id}" class="flex items-center text-gray-300 hover:text-white">
-                        <img src="${category.image}" alt="${category.name} Icon" class="h-5 w-5 mr-3">
-                        ${category.name}
-                    </a>
-                </li>
-            `).join('');
-            
-            if (sidebarNavUl) {
-                const allCategoriesLink = sidebarNavUl.querySelector('a[data-category="all"]').parentElement;
-                allCategoriesLink.insertAdjacentHTML('afterend', categoryLinksHtml);
-            }
-
-            const resourceCategorySelect = document.getElementById('resource-category');
-            if (resourceCategorySelect) {
-                resourceCategorySelect.innerHTML = '';
-                categories.filter(c => c.id !== 'pdfs').forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category.id;
-                    option.textContent = category.name;
-                    resourceCategorySelect.appendChild(option);
-                });
-            }
         })
         .catch(error => {
             console.log("Server not detected. Hiding server-dependent UI elements.");
@@ -223,21 +197,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 displayResources(searchTerm, currentCategory);
             });
 
-            categoryLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    currentCategory = link.dataset.category;
+            const sidebarNav = document.querySelector('aside nav');
+            sidebarNav.addEventListener('click', e => {
+                const link = e.target.closest('a[data-category]');
+                if (!link) return;
 
-                    categoryLinks.forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
+                e.preventDefault();
+                currentCategory = link.dataset.category;
 
-                    if (currentCategory === 'pdfs') {
-                        displayPdfs();
-                    } else {
-                        const searchTerm = searchBar.value.toLowerCase();
-                        displayResources(searchTerm, currentCategory);
-                    }
-                });
+                const allCategoryLinks = sidebarNav.querySelectorAll('a[data-category]');
+                allCategoryLinks.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                if (currentCategory === 'pdfs') {
+                    displayPdfs();
+                } else {
+                    const searchTerm = searchBar.value.toLowerCase();
+                    displayResources(searchTerm, currentCategory);
+                }
             });
 
             dashboardLink.addEventListener('click', (e) => {
