@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const uploadSection = document.getElementById('upload-form')?.parentElement;
     const addResourceSection = document.getElementById('add-resource-form')?.parentElement;
+    const addCategorySection = document.getElementById('add-category-form')?.parentElement;
     const sidebarNavUl = document.querySelector('aside nav ul');
 
     if (uploadSection) uploadSection.style.display = 'none';
     if (addResourceSection) addResourceSection.style.display = 'none';
+    if (addCategorySection) addCategorySection.style.display = 'none';
 
     fetch('/api/categories')
         .then(response => {
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(categories => {
             if (uploadSection) uploadSection.style.display = 'block';
             if (addResourceSection) addResourceSection.style.display = 'block';
+            if (addCategorySection) addCategorySection.style.display = 'block';
 
             const categoryLinksHtml = categories.map(category => `
                 <li class="mb-4">
