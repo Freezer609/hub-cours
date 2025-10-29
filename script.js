@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const uploadSection = document.getElementById('upload-form')?.parentElement;
+    if (uploadSection) {
+        // Hide it by default, then check if we can show it.
+        uploadSection.style.display = 'none';
+        fetch('/get-categories')
+            .then(response => {
+                if (response.ok) {
+                    // Server is up, show the form.
+                    uploadSection.style.display = 'block';
+                }
+            })
+            .catch(() => {
+                // Server is down, the form remains hidden.
+            });
+    }
+
     fetch('resources.json')
         .then(response => response.json())
         .then(resources => {
@@ -203,6 +219,54 @@ document.addEventListener('DOMContentLoaded', () => {
                             console.error('Error:', error);
                         });
                     }
+                });
+            }
+            const addResourceForm = document.getElementById('add-resource-form');
+            const resourceCategorySelect = document.getElementById('resource-category');
+
+            if (addResourceForm && resourceCategorySelect) {
+                fetch('/get-categories')
+                    .then(response => response.json())
+                    .then(categories => {
+                        categories.filter(c => c !== 'pdfs').forEach(category => {
+                            const option = document.createElement('option');
+                            option.value = category;
+                            option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                            resourceCategorySelect.appendChild(option);
+                        });
+                    })
+                    .catch(err => {
+                        addResourceForm.style.display = 'none';
+                    });
+
+                addResourceForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    const newResource = {
+                        title: document.getElementById('resource-title').value,
+                        url: document.getElementById('resource-url').value,
+                        description: document.getElementById('resource-description').value,
+                        category: resourceCategorySelect.value
+                    };
+
+                    fetch('/add-resource', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(newResource),
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert('Erreur lors de l\'ajout de la ressource.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Erreur de connexion au serveur.');
+                    });
                 });
             }
 

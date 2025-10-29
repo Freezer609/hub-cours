@@ -183,6 +183,46 @@ app.post('/edit-category', express.json(), (req, res) => {
     });
 });
 
+app.post('/add-resource', express.json(), (req, res) => {
+    const { title, url, description, category } = req.body;
+
+    if (!title || !url || !category) {
+        return res.status(400).send('Le titre, l\'URL et la catégorie sont requis.');
+    }
+
+    const resourcesPath = path.join(__dirname, 'resources.json');
+
+    fs.readFile(resourcesPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Erreur lors de la lecture du fichier resources.json.');
+        }
+
+        let resources = JSON.parse(data);
+        const newId = resources.length > 0 ? Math.max(...resources.map(r => r.id)) + 1 : 1;
+        
+        const newResource = {
+            id: newId,
+            title: title,
+            description: description || '',
+            url: url,
+            icon: 'fas fa-link',
+            category: category,
+            type: 'recent'
+        };
+
+        resources.push(newResource);
+
+        fs.writeFile(resourcesPath, JSON.stringify(resources, null, 4), 'utf8', (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Erreur lors de la mise à jour du fichier resources.json.');
+            }
+            res.status(200).send('Ressource ajoutée avec succès !');
+        });
+    });
+});
+
 app.listen(port, () => {
     console.log(`Serveur démarré sur http://localhost:${port}`);
 });
