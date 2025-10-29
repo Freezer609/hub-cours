@@ -105,16 +105,16 @@ function initializePage(categories, resources, isServerUp) {
         card.classList.add('card');
         card.dataset.category = resource.category;
         const iconClass = resource.category.toLowerCase() + '-icon';
-        card.innerHTML = "`
-            <div class=\"card-icon ${iconClass}\">
-                <i class=\"" + resource.icon + "\"></i>
+        card.innerHTML = `
+            <div class="card-icon ${iconClass}">
+                <i class="${resource.icon}"></i>
             </div>
             <div>
-                <h4 class=\"card-title\">${resource.title}</h4>
-                <p class=\"card-description\">${resource.description}</p>
-                <span class=\"card-link\">Voir la Ressource &rarr;</span>
+                <h4 class="card-title">${resource.title}</h4>
+                <p class="card-description">${resource.description}</p>
+                <span class="card-link">Voir la Ressource &rarr;</span>
             </div>
-        `";
+        `;
         const favoriteIcon = document.createElement('i');
         favoriteIcon.classList.add('fas', 'fa-star', 'absolute', 'top-4', 'right-4', 'cursor-pointer', 'text-gray-500');
         if (favorites.includes(resource.id)) {
@@ -191,13 +191,13 @@ function initializePage(categories, resources, isServerUp) {
     function createPdfCard(resource) {
         const card = document.createElement('div');
         card.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'flex', 'items-center', 'justify-between');
-        card.innerHTML = "`
+        card.innerHTML = `
             <div>
-                <h4 class=\"text-lg font-bold text-white\">${resource.title}</h4>
-                <a href=\"${resource.url}\" download class=\"text-blue-400 hover:text-blue-500\">Télécharger</a>
+                <h4 class="text-lg font-bold text-white">${resource.title}</h4>
+                <a href="${resource.url}" download class="text-blue-400 hover:text-blue-500">Télécharger</a>
             </div>
-            <i class=\"fas fa-file-pdf text-red-500 text-2xl\"></i>
-        `";
+            <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
+        `;
         return card;
     }
 
