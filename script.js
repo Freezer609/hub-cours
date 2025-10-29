@@ -58,16 +58,23 @@ function initializePage(categories, resources, isServerUp) {
         if (addCategorySection) addCategorySection.style.display = 'block';
 
         // On construit dynamiquement la barre de navigation avec les catégories.
-        const categoryLinksHtml = categories.map(category => `
-            <li class="mb-4">
-                <a href="#" data-category="${category.id}" class="flex items-center text-gray-300 hover:text-white">
-                    <img src="${category.image}" alt="${category.name} Icon" class="h-5 w-5 mr-3">
-                    ${category.name}
-                </a>
-            </li>
-        `).join('');
         if (sidebarNavUl) {
-            sidebarNavUl.innerHTML += categoryLinksHtml;
+            categories.forEach(category => {
+                const li = document.createElement('li');
+                li.className = 'mb-4';
+                const a = document.createElement('a');
+                a.href = '#';
+                a.dataset.category = category.id;
+                a.className = 'flex items-center text-gray-300 hover:text-white';
+                const img = document.createElement('img');
+                img.src = category.image;
+                img.alt = `${category.name} Icon`;
+                img.className = 'h-5 w-5 mr-3';
+                a.appendChild(img);
+                a.append(` ${category.name}`);
+                li.appendChild(a);
+                sidebarNavUl.appendChild(li);
+            });
         }
 
         // On remplit aussi le menu déroulant dans le formulaire "Ajouter une ressource".
