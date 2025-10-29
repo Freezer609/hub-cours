@@ -39,7 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     option.value = category.id;
                     option.textContent = category.name;
                     resourceCategorySelect.appendChild(option);
-
+                });
+            }
         })
         .catch(error => {
             console.log("Server not detected. Hiding server-dependent UI elements.");
