@@ -347,4 +347,6 @@ function initializePage(categories, resources, isServerUp) {
 
     // Appel initial pour afficher les ressources par défaut.
     displayResources();
+    // Rend le corps de la page visible une fois que tout est initialisé.
+    document.body.classList.remove('hidden');
 }
