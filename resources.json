@@ -52,5 +52,14 @@
         "icon": "fas fa-file-pdf",
         "category": "pdfs",
         "type": "recent"
+    },
+    {
+        "id": 7,
+        "title": "Tableau philosophe only",
+        "description": "PDF - Tableau philosophe only.pdf",
+        "url": "uploads/Tableau philosophe only.pdf",
+        "icon": "fas fa-file-pdf",
+        "category": "pdfs",
+        "type": "recent"
     }
 ]
