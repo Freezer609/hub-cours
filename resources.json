@@ -61,5 +61,14 @@
         "icon": "fas fa-file-pdf",
         "category": "pdfs",
         "type": "recent"
+    },
+    {
+        "id": 8,
+        "title": "chap 20 voc 1000 mots",
+        "description": "PDF - chap 20 voc 1000 mots.pdf",
+        "url": "uploads/chap 20 voc 1000 mots.pdf",
+        "icon": "fas fa-file-pdf",
+        "category": "pdfs",
+        "type": "recent"
     }
 ]
